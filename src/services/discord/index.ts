@@ -4,7 +4,7 @@ const env = require('../../configs/vars');
 const discordOAuthClient = new DiscordOAuth2({
     clientId: env.discordId,
     clientSecret: env.discordKey,
-    redirectUri: env.discordRedirect, // Ganti dengan URL callback aplikasi Anda
+    redirectUri: env.discordRedirect,
 });
 
 export default discordOAuthClient;

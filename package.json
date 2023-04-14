@@ -5,7 +5,10 @@
   "dependencies": {
     "@emotion/react": "^11.10.6",
     "@emotion/styled": "^11.10.6",
+    "@mui/icons-material": "^5.11.16",
     "@mui/material": "^5.12.0",
+    "@supabase/auth-ui-react": "^0.3.5",
+    "@supabase/auth-ui-shared": "^0.1.3",
     "@supabase/gotrue-js": "^2.22.1",
     "@supabase/supabase-js": "^2.20.0",
     "@testing-library/jest-dom": "^5.16.5",
@@ -15,13 +18,16 @@
     "@types/node": "^16.18.23",
     "@types/react": "^18.0.35",
     "@types/react-dom": "^18.0.11",
+    "axios": "^1.3.5",
     "discord-oauth2": "^2.11.0",
+    "moment": "^2.29.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.10.0",
     "react-scripts": "5.0.1",
     "typescript": "^4.9.5",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "zustand": "^4.3.7"
   },
   "scripts": {
     "start": "react-scripts start",

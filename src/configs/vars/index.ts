@@ -1,6 +1,7 @@
 
 
 const env = {
+    reactAppHost: process.env.REACT_APP_HOST,
     urlSupabase: process.env.REACT_APP_SUPABASE_URL,
     keySupabase: process.env.REACT_APP_SUPABASE_API_KEY,
     discordId: process.env.REACT_APP_DISCORD_ID,
