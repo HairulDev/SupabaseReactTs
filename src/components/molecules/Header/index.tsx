@@ -31,7 +31,7 @@ export default function Header() {
         setAuth(event.target.checked);
         await signOutApp();
         await getGames();
-        if (!tokenProfile || !tokenProfileDiscord)
+        if (!tokenProfile || tokenProfileDiscord)
             navigate('/auth')
     };
     useEffect(() => {
