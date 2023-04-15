@@ -24,15 +24,6 @@ export default function Auth() {
     const [isSignup, setIsSignup] = useState(false);
     const { user, setUser, accessToken, signInApp, signIn, setAccessToken, setRoles, signOut, refreshSession } = useAuthStore();
 
-    // const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    // event.preventDefault();
-    //     const data = new FormData(event.currentTarget);
-    //     console.log({
-    //         email: data.get('email'),
-    //         password: data.get('password'),
-    //     });
-    // };
-
     const clear = () => {
         setForm(initialsState);
     };
@@ -58,36 +49,21 @@ export default function Auth() {
     };
 
 
-
     const handleOAuth = async () => {
         await signIn();
     };
 
-    // const getUserRole = async () => {
-    //     const { data, error } = await supabase
-    //         .from('profiles')
-    //         .select('roles')
-    //         .single();
-    //     if (error)
-    // //         //  alert(
-    //     console.log(
-    //            `Error fecthing user's roles: ${error.message}`
-    //         )
-    //     else setRoles(data.roles)
-    // }
 
     useEffect(() => {
         const { data: { subscription } } =
             supabase.auth.onAuthStateChange(
                 async (event, session) => {
                     if (session?.user && !session?.access_token) {
-                        console.log("refreshSession state terpenuhi");
                         await refreshSession();
                     }
                     setUser(session?.user ?? null);
                     setAccessToken(session?.access_token ?? null);
                     if (event === 'SIGNED_OUT') setRoles([]);
-                    // if (event === 'SIGNED_IN') getUserRole();
                 })
 
         return () => {
