@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import {
     Avatar, Button, CssBaseline, TextField, FormControlLabel,
-    Checkbox, Link, Grid, Box, Typography, Container,
+    Checkbox, Link, Grid, Box, Typography, Container, Switch,
 } from '@mui/material';
+
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert, { AlertProps } from '@mui/material/Alert';
+import AlertTitle from '@mui/material/AlertTitle';
 
 import { useNavigate } from 'react-router-dom';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -22,7 +26,18 @@ export default function Auth() {
     const [disableSubmit, setDisableSubmit] = useState(false);
     const [reviewImage, setReviewImage] = useState("");
     const [isSignup, setIsSignup] = useState(false);
-    const { user, setUser, accessToken, signInApp, signIn, setAccessToken, setRoles, signOut, refreshSession } = useAuthStore();
+    const [open, setOpen] = useState(false);
+    const [message, setMessage] = useState('');
+    const { user, setUser, accessToken, signInApp, signUpApp, signIn, setAccessToken, setRoles, signOut, refreshSession } = useAuthStore();
+
+    const Alert = React.forwardRef<HTMLDivElement, AlertProps>((props, ref) => (
+        <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />
+    ));
+
+
+    const switchMode = () => {
+        setIsSignup((prevIsSignup) => !prevIsSignup);
+    };
 
     const clear = () => {
         setForm(initialsState);
@@ -37,9 +52,13 @@ export default function Auth() {
         e.preventDefault();
         setDisableSubmit(true)
         if (isSignup) {
-            await signInApp({ ...form })
+            const data = await signUpApp({ ...form });
+            const { message }: any = data;
+            console.log("erro signUpApp+====>", message);
             clear();
-            navigate('/')
+            setMessage(`${message}`);
+            setOpen(true);
+            setIsSignup((prevIsSignup) => !prevIsSignup);
         } else {
             await signInApp({ ...form })
             clear();
@@ -71,93 +90,98 @@ export default function Auth() {
         }
     }, [])
 
-    const signOutUser = async () => {
-        await signOut()
-        setUser(null)
-    }
-
     return (
         <>
-            {user ? (
-                <>
-                    <h1>Sucess</h1>
-                    <Button onClick={() => signOutUser()} >
-                        Sign Out
-                    </Button>
-                </>
-            ) : (
-                <ThemeProvider theme={theme}>
-                    <Container component="main" maxWidth="xs">
-                        <CssBaseline />
-                        <Box
-                            sx={{
-                                bgcolor: 'white',
-                                p: 3,
-                                borderRadius: 2,
-                                boxShadow: 3,
-                                marginTop: 8,
-                                display: 'flex',
-                                flexDirection: 'column',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Typography component="h1" variant="h5">
-                                Sign in
-                            </Typography>
-                            <Box component="form"
-                                onSubmit={handleSubmit}
-                                noValidate sx={{ mt: 1 }}>
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    id="email"
-                                    label="Email Address"
-                                    name="email"
-                                    value={form.email}
-                                    onChange={onChange}
-                                    autoComplete="email"
-                                    autoFocus
-                                />
-                                <TextField
-                                    margin="normal"
-                                    required
-                                    fullWidth
-                                    name="password"
-                                    value={form.password}
-                                    onChange={onChange}
-                                    label="Password"
-                                    type="password"
-                                    id="password"
-                                    autoComplete="current-password"
-                                />
-                                <Button
-                                    type="submit"
-                                    fullWidth
-                                    variant="outlined"
-                                    sx={{ mt: 2, }}
-                                    disabled={disableSubmit}
-                                >
-                                    Sign In
-                                </Button>
-                                <Button
-                                    onClick={handleOAuth}
-                                    fullWidth
-                                    variant="outlined"
-                                    color='secondary'
-                                    sx={{
-                                        mt: 1, mb: 2,
-                                    }}
-                                >
-                                    <img
-                                        style={{ width: 30 }}
-                                        src={discord} />  Discord Sign In
-                                </Button>
-                            </Box>
+            <ThemeProvider theme={theme}>
+                <Container component="main" maxWidth="xs">
+                    <CssBaseline />
+                    <Box
+                        sx={{
+                            bgcolor: 'white',
+                            p: 3,
+                            borderRadius: 2,
+                            boxShadow: 3,
+                            marginTop: 8,
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <Typography component="h1" variant="h5">
+                            {isSignup ? 'Sign Up' : 'Sign In'}
+                        </Typography>
+                        <Box component="form"
+                            onSubmit={handleSubmit}
+                            noValidate sx={{ mt: 1 }}>
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                id="email"
+                                label="Email Address"
+                                name="email"
+                                value={form.email}
+                                onChange={onChange}
+                                autoComplete="email"
+                                autoFocus
+                            />
+                            <TextField
+                                margin="normal"
+                                required
+                                fullWidth
+                                name="password"
+                                value={form.password}
+                                onChange={onChange}
+                                label="Password"
+                                type="password"
+                                id="password"
+                                autoComplete="current-password"
+                            />
+                            <Button
+                                type="submit"
+                                fullWidth
+                                variant="outlined"
+                                sx={{ mt: 2, }}
+                                disabled={disableSubmit}
+                            >
+                                {isSignup ? 'Sign Up' : 'Sign In'}
+                            </Button>
+                            <Button
+                                onClick={handleOAuth}
+                                fullWidth
+                                variant="outlined"
+                                color='secondary'
+                                sx={{
+                                    mt: 1, mb: 2,
+                                }}
+                            >
+                                <img
+                                    style={{ width: 30 }}
+                                    src={discord} />  Discord Sign In
+                            </Button>
+                            <FormControlLabel
+                                control={
+                                    <Switch
+                                        checked={isSignup}
+                                        onChange={switchMode}
+                                        aria-label="login switch"
+                                        color='warning'
+                                    />
+                                }
+                                label={isSignup ? 'Signin' : 'Signup'}
+                            />
                         </Box>
-                    </Container>
-                </ThemeProvider>
-            )}
+                    </Box>
+                    {open && (
+                        <Snackbar open={open} autoHideDuration={6000} onClose={() => setOpen(false)}>
+                            <Alert onClose={() => setOpen(false)} severity="success">
+                                <AlertTitle>Success</AlertTitle>
+                                {message}
+                            </Alert>
+                        </Snackbar>
+                    )}
+                </Container>
+            </ThemeProvider>
         </>
     );
 }

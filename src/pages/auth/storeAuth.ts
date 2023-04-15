@@ -17,6 +17,7 @@ API.interceptors.request.use((req) => {
 interface IAuthStore {
     getGame: (id: any) => void;
     getGames: () => void;
+    signUpApp: (formData: any) => void;
     signInApp: (formData: any) => void;
     signOutApp: () => void;
     createGame: (formData: any) => void;
@@ -47,12 +48,21 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
     user: null,
     accessToken: null,
     roles: [],
+    signUpApp: async (formData) => {
+        try {
+            const { data } = await API.post(`/user/register`, formData)
+            return data
+        } catch (error: any) {
+            return error
+        }
+    },
     signInApp: async (formData) => {
         try {
             const { data } = await API.post(`/user/login`, formData)
             localStorage.setItem('profile', JSON.stringify(data));
             return data
-        } catch (error) {
+        } catch (error: any) {
+            return error
         }
     },
     signOutApp: async () => {
@@ -66,6 +76,7 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
             }));
             return data
         } catch (error) {
+            return error
         }
     },
     getGames: async () => {
@@ -76,6 +87,7 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
             }));
             return data
         } catch (error) {
+            return error
         }
     },
     createGame: async (formData) => {
@@ -85,6 +97,7 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
             // form.append('title', title);
             await API.post(`/game/createGame`, formData)
         } catch (error) {
+            return error
         }
     },
     updateGame: async (id, formData) => {
@@ -97,6 +110,7 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
         try {
             await API.delete(`/game/deleteGame/${id}`)
         } catch (error) {
+            return error
         }
     },
     likeGame: async (id) => {
@@ -107,6 +121,7 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
             }));
             return game
         } catch (error) {
+            return error
         }
     },
     commentGame: async (id, comment) => {
@@ -118,6 +133,7 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
             }));
             return game
         } catch (error) {
+            return error
         }
     },
     signIn: () => {
@@ -163,6 +179,7 @@ export const useAuthStore = create<IAuthStore>((set, get) => ({
                 accessToken: session.access_token,
             }));
         } catch (error) {
+            return error
         }
     }
 
